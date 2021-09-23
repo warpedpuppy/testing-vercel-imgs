@@ -1,14 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
+
     <head>
         <meta charset="utf-8">
-        <title>MyFlix</title>
+        <title>MyFlix Documentation</title>
     </head>
+
     <body> 
         <h1>Welcome to the documentation page!</h1>
         <p>The purpose of this project is to build the server-side component of a “movies” web application. The web
             application will provide users with access to information about different
             movies, directors, and genres. Users will be able to sign up, update their
             personal information, and create a list of their favorite movies.</p>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Request</th>
+                    <th>URL</th>
+                    <th>HTTP Method</th>
+                    <th>Request data format</th>
+                    <th>Response data format</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Get a list of all movies</td>
+                    <td>/movies</td>
+                    <td>GET</td>
+                    <td>None</td>
+                    <td>A JSON object holding data about all the movies</td>
+                </tr>
+                <tr>
+                    <td>Get data about a single movie by title</td>
+                    <td>/movies/[Title]</td>
+                    <td>GET</td>
+                    <td>None</td>
+                    <td>
+                        A JSON object holding data about a single movie<br>
+                        Example:<br>
+                        {<br>
+                            id: 1,<br>
+                            title: "Captain America: The First Avenger",<br>
+                            description: "Origin story of Captain America and the beginning of all of the Avengers",<br>
+                            setting: 1942,<br>
+                            releaseDate: 2011,<br>
+                            director: Joe Johnston,<br>
+                            image url: "www.link.to/movie/coverartwork"<br>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td>Get data about setting or release date by year</td>
+                    <td>/movies/?setting=[setting] or /movies/?releaseDate=[releaseDate]</td>
+                    <td>GET</td>
+                    <td>The search query should contain "setting" or "releaseDate"</td>
+                    <td>A JSON object holding all movies assigned to a specific setting or release date.</td>
+                </tr>
+                <tr>
+                    <td>Get data about a director</td>
+                    <td>/directors/[Name]</td>
+                    <td>GET</td>
+                    <td>None</td>
+                    <td>
+                        A JSON object holding data about a director containing bio, birth year and death year.<br>
+                        Example:<br>
+                        {<br>
+                            bio: "Joe Johnston is an American film director known for his special effects.",<br>
+                            birthYear: 1950,<br>
+                            deathYear: N/A<br>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td>Allow new users to register</td>
+                    <td>/users</td>
+                    <td>POST</td>
+                    <td>A JSON object holding data containing user name, first name, last name, and email<br>
+                        Example:<br>
+                        {<br>
+                            userName: "CaptainSteve",<br>
+                            firstName: "Steve",<br>
+                            lastName: "Rogers",<br>
+                            email: "captainsteve@gmail.com"<br>
+                        }
+                    </td>
+                    <td>A verification message if the registration has been successful or not.</td>
+                </tr>
+                <tr>
+                    <td>Allow users to update their user data by user name</td>
+                    <td>/users/:userName</td>
+                    <td>PUT</td>
+                    <td>A JSON object holding data containing the user data to be changed.<br>
+                        Example:<br>
+                        {<br>
+                            firstName: "Sam",<br>
+                            lastName: "Wilson",<br>
+                        }
+                    </td>
+                    <td>A verification message that a new username was successfully assigned or failed.</td>
+                </tr>
+                <tr>
+                    <td>Allow users to add a movie to their list of favorites</td>
+                    <td>/users/:userName/favorites</td>
+                    <td>PUT</td>
+                    <td>A JSON object holding the name of the movie to be added.<br>
+                        Example:<br>
+                        {<br>
+                            name: "movieName",<br>
+                        }
+                    </td>
+                    <td>A message whether the film has been added successfully to favorites or not.</td>
+                </tr>
+                <tr>
+                    <td>Allow users to remove a movie from their list of favorites</td>
+                    <td>/users/:userName/favorites</td>
+                    <td>DELETE</td>
+                    <td>A JSON object holding the name of the film to be removed<br>
+                        Example:<br>
+                        {<br>
+                        name: "movieName"<br>
+                        }
+                    </td>
+                    <td>A message whether the film has been removed successfully or not from the favorites.</td>
+                </tr>
+                <tr>
+                    <td>Allow users to deregister by username</td>
+                    <td>/users/:userName</td>
+                    <td>DELETE</td>
+                    <td>The username of the user to be deleted should be put after /users/ in the URL.</td>
+                    <td>A verification message if the deregistration has been successful or not. </td>
+                </tr>
+            </tbody>
+        </table>
     </body>
 </html>
