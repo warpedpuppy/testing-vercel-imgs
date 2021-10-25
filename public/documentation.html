@@ -3,7 +3,7 @@
 
     <head>
         <meta charset="utf-8">
-        <title>MyFlix Documentation</title>
+        <title>SuperFlix Documentation</title>
     </head>
 
     <body> 
@@ -12,7 +12,7 @@
             application will provide users with access to information about different
             movies, directors, and genres. Users will be able to sign up, update their
             personal information, and create a list of their favorite movies.</p>
-        <table border="1">
+        <table>
             <thead>
                 <tr>
                     <th>Request</th>
@@ -39,26 +39,26 @@
                         A JSON object holding data about a single movie<br>
                         Example:<br>
                         {<br>
-                            id: 1,<br>
-                            title: "Captain America: The First Avenger",<br>
-                            description: "Origin story of Captain America and the beginning of all of the Avengers",<br>
-                            setting: 1942,<br>
-                            releaseDate: 2011,<br>
-                            director: Joe Johnston,<br>
-                            image url: "www.link.to/movie/coverartwork"<br>
-                        }
+                            "Series": {<br>
+                                "Name": "Marvel Cinematic Universe Films",<br>
+                                "Description": "The Marvel Cinematic Universe (MCU) films are a series of American superhero films produced by Marvel Studios starting in 2007 based on characters that appear in publications by Marvel Comics. The MCU is the shared universe in which all of the films are set."<br>
+                            },<br>
+                            "Director": {<br>
+                                "Name": "Ryan Fleck",<br>
+                                "Bio": "Ryan K. Fleck is an American film director, cinematographer, editor, and screenwriter.",<br>
+                                "Birth": "1976"<br>
+                            },<br>
+                            "_id": "6158cd372e1bb8fa86ab6e58",<br>
+                            "Title": "Captain Marvel",<br>
+                            "Description": "Origin story of Captain Marvel",<br>
+                            "ImagePath": "captainmarvel.png",<br>
+                            "Featured": false<br>
+                        }    
                     </td>
                 </tr>
                 <tr>
-                    <td>Get data about setting or release date by year</td>
-                    <td>/movies/?setting=[setting] or /movies/?releaseDate=[releaseDate]</td>
-                    <td>GET</td>
-                    <td>The search query should contain "setting" or "releaseDate"</td>
-                    <td>A JSON object holding all movies assigned to a specific setting or release date.</td>
-                </tr>
-                <tr>
                     <td>Get data about a director</td>
-                    <td>/directors/[Name]</td>
+                    <td>/movies/directors/[Name]</td>
                     <td>GET</td>
                     <td>None</td>
                     <td>
@@ -75,26 +75,27 @@
                     <td>Allow new users to register</td>
                     <td>/users</td>
                     <td>POST</td>
-                    <td>A JSON object holding data containing user name, first name, last name, and email<br>
+                    <td>A JSON object holding data containing id, first name, last name, and email<br>
                         Example:<br>
                         {<br>
-                            userName: "CaptainSteve",<br>
-                            firstName: "Steve",<br>
-                            lastName: "Rogers",<br>
-                            email: "captainsteve@gmail.com"<br>
+                            "Username": "CaptainSteve",<br>
+                            "Password": "firstcap",<br>
+                            "Email": "captainsteve@mail.com",<br>
+                            "Birthday": "1918-07-04T00:00:00.000Z",<br>
                         }
                     </td>
                     <td>A verification message if the registration has been successful or not.</td>
                 </tr>
                 <tr>
-                    <td>Allow users to update their user data by user name</td>
-                    <td>/users/:userName</td>
+                    <td>Allow users to update their user data by id</td>
+                    <td>/users/:id</td>
                     <td>PUT</td>
                     <td>A JSON object holding data containing the user data to be changed.<br>
                         Example:<br>
                         {<br>
-                            firstName: "Sam",<br>
-                            lastName: "Wilson",<br>
+                            "Username": "dianaPrince",<br>
+                            "Password": "wonderwoman",<br>
+                            "Email": "shouldbemarvel@mail.com"<br>
                         }
                     </td>
                     <td>A verification message that a new username was successfully assigned or failed.</td>
@@ -103,10 +104,17 @@
                     <td>Allow users to add a movie to their list of favorites</td>
                     <td>/users/:userName/favorites</td>
                     <td>PUT</td>
-                    <td>A JSON object holding the name of the movie to be added.<br>
+                    <td>A JSON object holding the user information with the name of the movie to be added.<br>
                         Example:<br>
                         {<br>
-                            name: "movieName",<br>
+                            "_id": "6164a606454e189100fa166e",<br>
+                            "Username": "dianaPrince",<br>
+                            "Password": "wonderwoman",<br>
+                            "Email": "shouldbemarvel@mail.com",<br>
+                            "FavoriteMovies": [<br>
+                                "6158cd372e1bb8fa86ab6e58"<br>
+                            ],<br>
+                            "__v": 0<br>
                         }
                     </td>
                     <td>A message whether the film has been added successfully to favorites or not.</td>
@@ -115,10 +123,15 @@
                     <td>Allow users to remove a movie from their list of favorites</td>
                     <td>/users/:userName/favorites</td>
                     <td>DELETE</td>
-                    <td>A JSON object holding the name of the film to be removed<br>
+                    <td>A JSON object holding the user information with the name of the film removed<br>
                         Example:<br>
                         {<br>
-                        name: "movieName"<br>
+                            "_id": "6164a606454e189100fa166e",<br>
+                            "Username": "dianaPrince",<br>
+                            "Password": "wonderwoman",<br>
+                            "Email": "shouldbemarvel@mail.com",<br>
+                            "FavoriteMovies": [],<br>
+                            "__v": 0<br>
                         }
                     </td>
                     <td>A message whether the film has been removed successfully or not from the favorites.</td>
