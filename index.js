@@ -19,135 +19,30 @@ app.use(morgan('common'));
 app.use(express.static('public'));
 app.use(bodyParser.json());
 
-/* An array of objects with the first 10 Marvel movies
-let topMovies = [
-    {
-        title: 'Captain America: The First Avenger',
-        setting: 1942,
-        description: 'Origin story of Captain America and the beginning of all of the Avengers',
-        releaseDate: 2011,
-        director: 'Joe Johnston',
-        series: 'Marvel Cinematic Universe',
-        imageUrl: "www.link.to/movie/coverartwork"
-    },
-    {
-        title: 'Captain Marvel',
-        setting: 1995,
-        description: 'Origin story of Captain Marvel',
-        releaseDate: 2019,
-        director: 'Ryan Fleck',
-        series: 'Marvel Cinematic Universe',
-        imageUrl: "www.link.to/movie/coverartwork"
-    },
-    {
-        title: 'Iron Man',
-        setting: 2010,
-        description: 'Origin story of Iron Man',
-        releaseDate: 2008,
-        director: 'Jon Favreau',
-        series: 'Marvel Cinematic Universe',
-        imageUrl: "www.link.to/movie/coverartwork"
-    },
-    {
-        title: 'Iron Man 2',
-        setting: 2011,
-        description: 'Iron Man is pressured to share his technology with the military',
-        releaseDate: 2010,
-        director: 'Jon Favreau',
-        series: 'Marvel Cinematic Universe',
-        imageUrl: "www.link.to/movie/coverartwork"
-    },
-    {
-        title: 'The Incredible Hulk',
-        setting: 2011,
-        description: 'The Hulk battles The Abomination while searching for a cure',
-        releaseDate: 2008,
-        director: 'Louis Leterrier',
-        series: 'Marvel Cinematic Universe',
-        imageUrl: "www.link.to/movie/coverartwork"
-    },
-    {
-        title: 'Thor',
-        setting: 2011,
-        description: 'Stripped of his powers, Thor is banished to Earth.',
-        releaseDate: 2011,
-        director: 'Kenneth Branagh',
-        series: 'Marvel Cinematic Universe',
-        imageUrl: "www.link.to/movie/coverartwork"
-    },
-    {
-        title: 'The Avengers',
-        setting: 2012,
-        description: 'Nick Fury gathers the Avengers to save the Earth',
-        releaseDate: 2012,
-        director: 'Joss Whedon',
-        series: 'Marvel Cinematic Universe',
-        imageUrl: "www.link.to/movie/coverartwork"
-    },
-    {
-        title: 'Iron Man 3',
-        setting: 2012,
-        description: 'Tony Stark faces his biggest challenge yet',
-        releaseDate: 2013,
-        director: 'Shane Black',
-        series: 'Marvel Cinematic Universe',
-        imageUrl: "www.link.to/movie/coverartwork"
-    },
-    {
-        title: 'Thor: The Dark World',
-        setting: 2013,
-        description: 'Thor must bring his love to Asgard before she is used to turn the universe into darkness',
-        releaseDate: 2013,
-        director: 'Alan Taylor',
-        series: 'Marvel Cinematic Universe',
-        imageUrl: "www.link.to/movie/coverartwork"
-    },
-    {
-        title: 'Captain America: The Winter Soldier',
-        setting: 2014,
-        description: 'Captain America is joined by Black Widow and the Falcon to battle the Winter Soldier',
-        releaseDate: 2014,
-        director: 'Anthony Russo and Joe Russo',
-        series: 'Marvel Cinematic Universe',
-        imageUrl: "www.link.to/movie/coverartwork"
-    }
-
-]
-
-const users = [
-    {
-        id: '1',
-        firstName: 'Captain',
-        lastName: 'Steve',
-        email: 'captainsteve@mail.com'
-    },
-    {
-        id: '2',
-        firstName: 'Captain',
-        lastName: 'Sam',
-        email: 'falcon@mail.com'
-    }
-];*/
+// Adding Passport authentication
+let auth = require('./auth')(app);
+const passport = require('passport');
+require('./passport');
 
 // Returning a welcome message
-app.get('/', (req, res) => {
+app.get('/', (_req, res) => {
     res.send('<h1>Welcome to SuperFlix!</h1>');
 });
 
 // Returning the list of all movies
-app.get('/movies', (req, res) => {
+app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
     Movies.find()
         .then((movies) => {
             res.status(201).json(movies);
         })
-        .catch((err) => {
-            console.error(err);
-            res.status(500).send('Error: ' + err);
+        .catch((error) => {
+            console.error(error);
+            res.status(500).send('Error: ' + error);
         });
 });
 
 // Returning a list of all users
-app.get('/users', (req, res) => {
+app.get('/users', passport.authenticate('jwt', { session: false }), (req, res) => {
     Users.find()
         .then((users) => {
             res.status(201).json(users);
@@ -159,7 +54,7 @@ app.get('/users', (req, res) => {
 });
 
 // Get a user by username
-app.get('/users/:Username', (req, res) => {
+app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
     Users.findOne({ Username: req.params.Username })
         .then((user) => {
             res.json(user);
@@ -171,7 +66,7 @@ app.get('/users/:Username', (req, res) => {
 });
 
 // Return data about a single movie by title
-app.get('/movies/:Title', (req, res) => {
+app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req, res) => {
     Movies.findOne({ Title: req.params.Title })
         .then((movie) => {
             res.json(movie);
@@ -183,7 +78,7 @@ app.get('/movies/:Title', (req, res) => {
 });
 
 // Return data about a series by name
-app.get('/movies/series/:Name', (req, res) => {
+app.get('/movies/series/:Name', passport.authenticate('jwt', { session: false }), (req, res) => {
     Movies.find({ 'Series.Name': req.params.Name })
     .then((series) => {
         res.json(series);
@@ -195,7 +90,7 @@ app.get('/movies/series/:Name', (req, res) => {
 });
 
 // Return data about a director by name
-app.get('/movies/directors/:Name', (req, res) => {
+app.get('/movies/directors/:Name', passport.authenticate('jwt', { session: false }), (req, res) => {
     Movies.find({ 'Director.Name': req.params.Name })
         .then((director) => {
             res.json(director);
@@ -234,7 +129,7 @@ app.post('/users', (req, res) => {
 });
 
 // Update a user's info, by username
-app.put('/users/:Username', (req, res) => {
+app.put('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
     Users.findOneAndUpdate(
         { Username: req.params.Username }, 
         { 
@@ -257,7 +152,7 @@ app.put('/users/:Username', (req, res) => {
 });
 
 // Allow users to add a movie to their list of favorites
-app.post('/users/:Username/movies/:MovieID', (req, res) => {
+app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
     Users.findOneAndUpdate({ Username: req.params.Username }, {
         $push: { FavoriteMovies: req.params.MovieID }
     },
@@ -273,7 +168,7 @@ app.post('/users/:Username/movies/:MovieID', (req, res) => {
 });
 
 // Allow users to remove a movie from their list of favorites
-app.delete('/users/:Username/movies/:MovieID', (req, res) => {
+app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
     Users.findOneAndUpdate({ Username: req.params.Username }, {
         $pull: { FavoriteMovies: req.params.MovieID }
     },
@@ -289,7 +184,7 @@ app.delete('/users/:Username/movies/:MovieID', (req, res) => {
 });
 
 // Delete a user by username
-app.delete('/users/:Username', (req, res) => {
+app.delete('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
     Users.findOneAndRemove ({ Username: req.params.Username })
         .then((user) => {
             if (!user) {
@@ -305,13 +200,13 @@ app.delete('/users/:Username', (req, res) => {
 });
 
 // Error handler
-app.use((err, req, res, next) => {
+app.use((err, _req, res, _next) => {
     console.error(err.stack);
     res.status(500).send('Something broke!');
 });
 
 app.listen(8080, () => {
-    console.log('MyFlix is listening on port 8080.');
+    console.log('SuperFlix is listening on port 8080.');
 });
 
 
