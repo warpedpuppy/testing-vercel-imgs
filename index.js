@@ -160,7 +160,7 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
     if (!errors.isEmpty()) {
         return res.status(422).json({ errors: errors.array() });
     }
-    
+
     Users.findOneAndUpdate(
         { Username: req.params.Username }, 
         { 
@@ -236,8 +236,9 @@ app.use((err, _req, res, _next) => {
     res.status(500).send('Something broke!');
 });
 
-app.listen(8080, () => {
-    console.log('SuperFlix is listening on port 8080.');
+const port = process.env.PORT || 8080;
+app.listen(port, '0.0.0.0',() => {
+    console.log('SuperFlix is listening on Port ' + port);
 });
 
 
