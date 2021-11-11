@@ -12,7 +12,7 @@ const Models = require('./models.js');
 const Movies = Models.Movie;
 const Users = Models.User;
 
-mongoose.connect('mongodb://localhost:27017/superFlixDB', { useNewUrlParser: true, useUnifiedTopology: true, });
+mongoose.connect('mongodb+srv://k8molony:All1s0n1229@superflixdb.ksq4r.mongodb.net/superFlixDB?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true, });
 
 // Logging middleware
 app.use(morgan('common'));
