@@ -1,6 +1,6 @@
 const express = require('express');
-    bodyParser = require('body-parser');
-    uuid = require('uuid');
+bodyParser = require('body-parser');
+uuid = require('uuid');
 
 const { check, validationResult } = require('express-validator');
 
@@ -12,7 +12,9 @@ const Models = require('./models.js');
 const Movies = Models.Movie;
 const Users = Models.User;
 
-mongoose.connect( process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true, });
+//mongoose.connect('mongodb://localhost:27017/dbname', { useNewUrlParser: true, useUnifiedTopology: true });
+
+mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true, });
 
 // Logging middleware
 app.use(morgan('common'));
@@ -35,7 +37,7 @@ app.get('/', (_req, res) => {
 });
 
 // Returning the list of all movies
-app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/movies', (req, res) => {
     Movies.find()
         .then((movies) => {
             res.status(201).json(movies);
@@ -85,13 +87,13 @@ app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req
 // Return data about a series by name
 app.get('/movies/series/:Name', passport.authenticate('jwt', { session: false }), (req, res) => {
     Movies.find({ 'Series.Name': req.params.Name })
-    .then((series) => {
-        res.json(series);
-    })
-    .catch((err) => {
-        console.error(err);
-        res.status(500).send('Error: ' + err);
-    });
+        .then((series) => {
+            res.json(series);
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
 });
 
 // Return data about a director by name
@@ -107,14 +109,14 @@ app.get('/movies/directors/:Name', passport.authenticate('jwt', { session: false
 });
 
 // Allow new users to register
-app.post('/users', 
+app.post('/users',
     [
-        check('Username', 'Username is required').isLength({min: 5}),
+        check('Username', 'Username is required').isLength({ min: 5 }),
         check('Username', 'Username contains non-alphanumeric characters - not allowed.').isAlphanumeric(),
-        check('Password', 'Password is required, min 6 characters').isLength({min: 6}),
+        check('Password', 'Password is required, min 6 characters').isLength({ min: 6 }),
         check('Email', 'Email does not appear to be valid').isEmail()
-    ],  (req, res) => {
-        let errors = validationResult(req); 
+    ], (req, res) => {
+        let errors = validationResult(req);
 
         if (!errors.isEmpty()) {
             return res.status(422).json({ errors: errors.array() });
@@ -143,59 +145,59 @@ app.post('/users',
             .catch((error) => {
                 console.error(error);
                 res.status(500).send('Error: ' + error);
-        });
+            });
     });
 
 // Update a user's info, by username
-app.put('/users/:Username', passport.authenticate('jwt', { session: false }),  
-[
-    check('Username', 'Username is required').isLength({min: 5}),
-    check('Username', 'Username contains non-alphanumeric characters - not allowed.').isAlphanumeric(),
-    check('Password', 'Password is required, min 6 characters').isLength({min: 6}),
-    check('Email', 'Email does not appear to be valid').isEmail()
-], (req, res) => {
+app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
+    [
+        check('Username', 'Username is required').isLength({ min: 5 }),
+        check('Username', 'Username contains non-alphanumeric characters - not allowed.').isAlphanumeric(),
+        check('Password', 'Password is required, min 6 characters').isLength({ min: 6 }),
+        check('Email', 'Email does not appear to be valid').isEmail()
+    ], (req, res) => {
 
-    let errors = validationResult(req);
+        let errors = validationResult(req);
 
-    if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() });
-    }
-
-    Users.findOneAndUpdate(
-        { Username: req.params.Username }, 
-        { 
-            $set: {
-                Username: req.body.Username,
-                Password: req.body.Password,
-                Email: req.body.Email,
-                Birthday: req.body.Birthday
+        if (!errors.isEmpty()) {
+            return res.status(422).json({ errors: errors.array() });
         }
-    },
-    { new: true },
-    (err, updatedUser) => {
-        if(err) {
-            console.error(err);
-            res.status(500).send('Error: ' + err);
-        } else {
-            res.json(updatedUser);
-        }
+
+        Users.findOneAndUpdate(
+            { Username: req.params.Username },
+            {
+                $set: {
+                    Username: req.body.Username,
+                    Password: req.body.Password,
+                    Email: req.body.Email,
+                    Birthday: req.body.Birthday
+                }
+            },
+            { new: true },
+            (err, updatedUser) => {
+                if (err) {
+                    console.error(err);
+                    res.status(500).send('Error: ' + err);
+                } else {
+                    res.json(updatedUser);
+                }
+            });
     });
-});
 
 // Allow users to add a movie to their list of favorites
 app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
     Users.findOneAndUpdate({ Username: req.params.Username }, {
         $push: { FavoriteMovies: req.params.MovieID }
     },
-    { new: true },
-    (err, updatedUser) => {
-        if (err) {
-            console.error(err);
-            res.status(500).send('Error: ' + err);
-        } else {
-            res.json(updatedUser);
-        }
-    });
+        { new: true },
+        (err, updatedUser) => {
+            if (err) {
+                console.error(err);
+                res.status(500).send('Error: ' + err);
+            } else {
+                res.json(updatedUser);
+            }
+        });
 });
 
 // Allow users to remove a movie from their list of favorites
@@ -203,20 +205,20 @@ app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { se
     Users.findOneAndUpdate({ Username: req.params.Username }, {
         $pull: { FavoriteMovies: req.params.MovieID }
     },
-    { new: true },
-    (err, updatedUser) => {
-        if (err) {
-            console.error(err);
-            res.status(500).send('Error: ' + err);
-        } else {
-            res.json(updatedUser);
-        }
-    });
+        { new: true },
+        (err, updatedUser) => {
+            if (err) {
+                console.error(err);
+                res.status(500).send('Error: ' + err);
+            } else {
+                res.json(updatedUser);
+            }
+        });
 });
 
 // Delete a user by username
 app.delete('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
-    Users.findOneAndRemove ({ Username: req.params.Username })
+    Users.findOneAndRemove({ Username: req.params.Username })
         .then((user) => {
             if (!user) {
                 res.status(400).send(req.params.Username + ' was not found');
@@ -237,7 +239,7 @@ app.use((err, _req, res, _next) => {
 });
 
 const port = process.env.PORT || 8080;
-app.listen(port, '0.0.0.0',() => {
+app.listen(port, '0.0.0.0', () => {
     console.log('SuperFlix is listening on Port ' + port);
 });
 
