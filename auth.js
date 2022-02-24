@@ -30,9 +30,8 @@ module.exports = (router) => {
                 let token = generateJWTToken(user.toJSON());
                 return res.json({ user, token });
             });
-        })(req, res);
+        })(req, res); 
     });
 }
 
 
-mongoimport --uri mongodb+srv://k8molony:u-hTkUUi23nSw4D@k8coder.wamry.mongodb.net/superFlixDB --collection movies --type json --file ../movies.json
