@@ -12,9 +12,9 @@ const Models = require('./models.js');
 const Movies = Models.Movie;
 const Users = Models.User;
 
-//mongoose.connect('mongodb://localhost:27017/dbname', { useNewUrlParser: true, useUnifiedTopology: true });
+//mongoose.connect('mongodb://localhost:27017/superFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
-mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true, });
+mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 // Logging middleware
 app.use(morgan('common'));

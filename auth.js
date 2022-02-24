@@ -16,7 +16,7 @@ let generateJWTToken = (user) => {
 /* POST login. */
 module.exports = (router) => {
     router.post('/login', (req, res) => {
-        passport.authenticate('local', { session: false }, (error, user, info) => {
+        passport.authenticate('local', { session: false }, (error, user, _info) => {
             if (error || !user) {
                 return res.status(400).json({
                     message: 'Something is not right',
@@ -33,3 +33,6 @@ module.exports = (router) => {
         })(req, res);
     });
 }
+
+
+mongoimport --uri mongodb+srv://k8molony:u-hTkUUi23nSw4D@k8coder.wamry.mongodb.net/superFlixDB --collection movies --type json --file ../movies.json
