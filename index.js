@@ -1,6 +1,6 @@
 const express = require('express');
 bodyParser = require('body-parser');
-uuid = require('uuid');
+uuid = require('uuid');             
 
 const { check, validationResult } = require('express-validator');
 
@@ -108,7 +108,7 @@ app.get('/movies/directors/:Name', passport.authenticate('jwt', { session: false
         });
 });
 
-// Allow new users to register
+//Allow new users to register
 app.post('/users',
     [
         check('Username', 'Username is required').isLength({ min: 5 }),
