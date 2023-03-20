@@ -30,6 +30,7 @@ const cors = require("cors");
 let allowedOrigins = [
   "https://superflixheroes.netlify.app",
   "http://localhost:1234",
+  "https://movie-api-k8molony.vercel.app",
 ];
 
 app.use(
