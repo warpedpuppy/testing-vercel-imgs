@@ -6,12 +6,6 @@
       "use": "@vercel/node"
     }
   ],
-  "routes": [
-    {
-      "src": "/(https://github.com/k8molony/movie_api)",
-      "dest": "/"
-    }
-  ],
   "headers": [
     {
       "source": "/api/(.*)",
