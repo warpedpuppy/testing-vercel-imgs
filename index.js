@@ -12,8 +12,6 @@ const Models = require("./models.js");
 const Movies = Models.Movie;
 const Users = Models.User;
 
-//mongoose.connect('mongodb://localhost:27017/superFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
-
 mongoose.connect(
   process.env.CONNECTION_URI || "mongodb://localhost:27017/superFlixDB",
   { useNewUrlParser: true, useUnifiedTopology: true }
@@ -29,9 +27,9 @@ app.use(bodyParser.json());
 const cors = require("cors");
 let allowedOrigins = [
   "https://superflixheroes.netlify.app",
-  "http://localhost:1234",
+  "http://localhost:1234/",
   "http://localhost:4200",
-  "https://movie-api-k8molony.vercel.app",
+  "https://movie-api-k8molony.vercel.app/",
 ];
 
 app.use(
