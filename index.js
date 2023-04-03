@@ -21,7 +21,7 @@ mongoose.connect(
 app.use(morgan("common"));
 
 // For the sending of static files
-app.use(express.static("public"));
+app.use(express.static("dest"));
 app.use(bodyParser.json());
 
 const cors = require("cors");
