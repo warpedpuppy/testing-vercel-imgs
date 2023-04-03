@@ -21,7 +21,7 @@ mongoose.connect(
 app.use(morgan("common"));
 
 // For the sending of static files
-app.use(express.static("dest"));
+app.use(express.static("public"));
 app.use(bodyParser.json());
 
 const cors = require("cors");
@@ -53,9 +53,9 @@ const passport = require("passport");
 require("./passport");
 
 // Returning a welcome message
-app.get("/", (_req, res) => {
-  res.send("<h1>Welcome to SuperFlix!</h1>");
-});
+// app.get("/", (_req, res) => {
+//   res.send("<h1>Welcome to SuperFlix!</h1>");
+// });
 
 // Returning the list of all movies
 app.get(
